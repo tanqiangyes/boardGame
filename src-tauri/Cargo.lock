@@ -130,6 +130,7 @@ dependencies = [
 name = "boardGame"
 version = "0.0.0"
 dependencies = [
+ "bull",
  "serde",
  "serde_json",
  "tauri",
@@ -164,6 +165,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba3569f383e8f1598449f1a423e72e99569137b47740b1da11ef19af3d5c3223"
 dependencies = [
  "memchr",
+]
+
+[[package]]
+name = "bull"
+version = "0.1.0"
+dependencies = [
+ "plate",
 ]
 
 [[package]]
@@ -1871,6 +1879,10 @@ name = "pkg-config"
 version = "0.3.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1df8c4ec4b0627e53bdf214615ad287367e482558cf84b109250b37464dc03ae"
+
+[[package]]
+name = "plate"
+version = "0.1.0"
 
 [[package]]
 name = "plist"
