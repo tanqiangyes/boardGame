@@ -9,6 +9,8 @@ pub enum PColor {
     Square, // 方块
     Hearts, // 红心
     Spades, // 黑桃
+    Queen,  // 小王
+    King,   // 大王
 }
 
 impl PColor {
@@ -19,6 +21,8 @@ impl PColor {
             PColor::Square => "square",
             PColor::Hearts => "hearts",
             PColor::Spades => "spades",
+            PColor::Queen => "queen",
+            PColor::King => "king",
         }
     }
 
@@ -29,26 +33,30 @@ impl PColor {
             PColor::Square => "方块",
             PColor::Hearts => "红心",
             PColor::Spades => "黑桃",
+            PColor::Queen => "小王",
+            PColor::King => "大王",
         }
     }
 }
 
 /// This enum is used to represent the value of the card
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
 pub enum PValue {
-    CardA,  // A
-    Card2,  // 2
-    Card3,  // 3
-    Card4,  // 4
-    Card5,  // 5
-    Card6,  // 6
-    Card7,  // 7
-    Card8,  // 8
-    Card9,  // 9
-    Card10, // 10
-    CardJ,  // J
-    CardQ,  // Q
-    CardK,  // K
+    CardA,     // A
+    Card2,     // 2
+    Card3,     // 3
+    Card4,     // 4
+    Card5,     // 5
+    Card6,     // 6
+    Card7,     // 7
+    Card8,     // 8
+    Card9,     // 9
+    Card10,    // 10
+    CardJ,     // J
+    CardQ,     // Q
+    CardK,     // K
+    CardQueen, // queen
+    CardKing,  // king
 }
 
 impl PValue {
@@ -68,10 +76,12 @@ impl PValue {
             PValue::CardJ => "J",
             PValue::CardQ => "Q",
             PValue::CardK => "K",
+            PValue::CardQueen => "Queen",
+            PValue::CardKing => "King",
         }
     }
 
-    fn value(&self) -> u8 {
+    pub fn value(&self) -> u8 {
         match self {
             PValue::CardA => 1,
             PValue::Card2 => 2,
@@ -86,6 +96,8 @@ impl PValue {
             PValue::CardJ => 11,
             PValue::CardQ => 12,
             PValue::CardK => 13,
+            PValue::CardQueen => 14,
+            PValue::CardKing => 15,
         }
     }
 }
@@ -106,26 +118,79 @@ impl From<u8> for PValue {
             11u8 => PValue::CardJ,
             12u8 => PValue::CardQ,
             13u8 => PValue::CardK,
-            _ => panic!("error palte value {:?}", from)
+            14u8 => PValue::CardQueen,
+            15u8 => PValue::CardKing,
+            _ => panic!("error palte value {:?}", from),
         }
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Plate {
     pub pcolor: PColor,
     pub pvalue: PValue,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+impl Plate {
+    pub fn new(pcolor: PColor, pvalue: PValue) -> Self {
+        Plate { pcolor, pvalue }
+    }
+
+    pub fn string(&self) -> String {
+        format!("{} {}", self.pcolor.string(), self.pvalue.string())
+    }
+}
+
+impl Default for Plate {
+    fn default() -> Self {
+        Plate {
+            pvalue: PValue::Card2,
+            pcolor: PColor::Hearts,
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
 pub struct Plates {
     pub plates: Vec<Plate>,
 }
 
 impl Plates {
     /// init plates
-    pub(crate) fn new() -> Plates {
+    pub fn new() -> Self {
         let mut plates: Vec<Plate> = Vec::new();
+        let end: u8 = 14;
+        for i in 1..end {
+            plates.push(Plate {
+                pcolor: PColor::Plum,
+                pvalue: i.into(),
+            });
+            plates.push(Plate {
+                pcolor: PColor::Square,
+                pvalue: i.into(),
+            });
+            plates.push(Plate {
+                pcolor: PColor::Hearts,
+                pvalue: i.into(),
+            });
+            plates.push(Plate {
+                pcolor: PColor::Spades,
+                pvalue: i.into(),
+            });
+        }
+        Plates { plates }
+    }
+
+    pub fn new_with_queen_king() -> Self {
+        let mut plates: Vec<Plate> = Vec::new();
+        plates.push(Plate {
+            pcolor: PColor::Queen,
+            pvalue: 14u8.into(),
+        });
+        plates.push(Plate {
+            pcolor: PColor::King,
+            pvalue: 15u8.into(),
+        });
         let end: u8 = 14;
         for i in 1..end {
             plates.push(Plate {
@@ -151,6 +216,12 @@ impl Plates {
     pub fn random(&mut self) -> &Plates {
         self.plates.shuffle(&mut thread_rng());
         self
+    }
+
+    pub fn clone(&self) -> Self {
+        Plates {
+            plates: self.plates.clone(),
+        }
     }
 }
 
