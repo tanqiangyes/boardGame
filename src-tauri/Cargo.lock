@@ -131,6 +131,7 @@ name = "boardGame"
 version = "0.0.0"
 dependencies = [
  "bull",
+ "room",
  "serde",
  "serde_json",
  "tauri",
@@ -2166,6 +2167,10 @@ dependencies = [
  "web-sys",
  "windows 0.37.0",
 ]
+
+[[package]]
+name = "room"
+version = "0.1.0"
 
 [[package]]
 name = "rustc_version"

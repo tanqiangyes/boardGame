@@ -29,3 +29,7 @@ custom-protocol = [ "tauri/custom-protocol" ]
 [dependencies.bull]
 path = "bull"
 version = "0.1.0"
+
+[dependencies.room]
+path = "room"
+version = "0.1.0"

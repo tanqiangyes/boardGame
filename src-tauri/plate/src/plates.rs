@@ -1,12 +1,16 @@
+/// a deck of cards, which have 52 plates, and a king and a queen.
+/// there have four color, spades, hearts, plum, square, if a plate is king or queen, have no color, in order to show the king and queen, i add two type for color.
+/// there have 13 kinds of cards.
+/// this crate just a fundentment for plate game.
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::fmt;
 
 /// This enum is used to indicate the suit of the board.
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
 pub enum PColor {
-    Plum,   // 梅花
     Square, // 方块
+    Plum,   // 梅花
     Hearts, // 红心
     Spades, // 黑桃
     Queen,  // 小王
@@ -125,17 +129,20 @@ impl From<u8> for PValue {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+/// a plate is a card, which have color and value.
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
 pub struct Plate {
-    pub pcolor: PColor,
     pub pvalue: PValue,
+    pub pcolor: PColor,
 }
 
 impl Plate {
+    /// initialize, just for some times need.
     pub fn new(pcolor: PColor, pvalue: PValue) -> Self {
         Plate { pcolor, pvalue }
     }
 
+    /// a format function.
     pub fn string(&self) -> String {
         format!("{} {}", self.pcolor.string(), self.pvalue.string())
     }
@@ -181,6 +188,7 @@ impl Plates {
         Plates { plates }
     }
 
+    /// some plate game need king and queen.
     pub fn new_with_queen_king() -> Self {
         let mut plates: Vec<Plate> = Vec::new();
         plates.push(Plate {
@@ -213,11 +221,16 @@ impl Plates {
         Plates { plates }
     }
 
+    /// shuffle the plates.
+    /// we shuffle 3 times.
     pub fn random(&mut self) -> &Plates {
+        self.plates.shuffle(&mut thread_rng());
+        self.plates.shuffle(&mut thread_rng());
         self.plates.shuffle(&mut thread_rng());
         self
     }
 
+    /// because struct cannot Clone, so make a clone function.
     pub fn clone(&self) -> Self {
         Plates {
             plates: self.plates.clone(),

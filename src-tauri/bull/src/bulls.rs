@@ -1,10 +1,14 @@
+/// a bull game.
+/// every game have 52 plates, every player have five plates, so max player number is 10.
 use anyhow::{ensure, Error, Result};
 use plate::plates::{Plate, Plates};
 use std::fmt;
 
-/// max player number
+/// in bull game, max player number, because a deck of plate just have 52 plates.
 const MAX_PLAYERS: usize = 10;
+/// in bull game, every player owns five plates.
 const PER_PLAYER_PLATE: usize = 5;
+/// a constant number, many place use it.
 const BULL_NIU: u8 = 10;
 
 /// This is a game plate of bull, we use one plates to deal.
@@ -12,11 +16,15 @@ const BULL_NIU: u8 = 10;
 pub struct Bulls(Vec<Plate>);
 impl Bulls {
     /// initialize
+    /// this bull contains a random plates, which have no king and queen.
     pub fn new() -> Bulls {
-        let plates = Plates::new().random().clone().plates;
-        Bulls(plates.to_vec())
+        Bulls(Plates::new().random().clone().plates)
     }
 
+    /// deal bull game plate.
+    /// max player number: 10;
+    /// return a vector, each column have five plate.
+    /// not failed.
     pub fn deal(&self, player: usize) -> Result<Vec<Bull>, Error> {
         ensure!(
             player <= MAX_PLAYERS,
@@ -32,13 +40,7 @@ impl Bulls {
                 .filter(|(i, _)| i % player == p)
                 .map(|(_, plate)| plate.clone())
                 .collect::<Vec<_>>();
-            let mut bull: [Plate; 5] = [
-                Default::default(),
-                Default::default(),
-                Default::default(),
-                Default::default(),
-                Default::default(),
-            ];
+            let mut bull: [Plate; 5] = Default::default();
             for i in 0..PER_PLAYER_PLATE {
                 bull[i] = p0[i]
             }
@@ -66,31 +68,40 @@ impl fmt::Display for Bulls {
 }
 
 /// In bull game , every bull can hold five plates, so make this.
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
 pub struct Bull([Plate; 5]);
 impl Bull {
+    /// every plate value is less than 10, and the sum of five plates is less than 10.
     pub fn is_small_niu(&self) -> bool {
         self.0.clone().iter().map(|s| s.pvalue.value()).sum::<u8>() <= BULL_NIU
     }
 
+    /// four plate have same value.
     pub fn is_bomb(&self) -> bool {
         let mut s = self.0.clone();
         s.sort_by_key(|&p| p.pvalue.value());
-        s[0].pvalue.value() == s[3].pvalue.value() || s[1].pvalue.value() == s[2].pvalue.value()
+        s[0].pvalue.value() == s[3].pvalue.value() || s[1].pvalue.value() == s[4].pvalue.value()
     }
 
+    /// all plate value greater than 10.
     pub fn is_gold_niu(&self) -> bool {
         let mut s = self.0.clone();
         s.sort_by_key(|&p| p.pvalue.value());
         s[0].pvalue.value() > BULL_NIU
     }
 
+    /// first plate value equal 10, other plate value greater than 10.
     pub fn is_silver_niu(&self) -> bool {
         let mut s = self.0.clone();
         s.sort_by_key(|&p| p.pvalue.value());
         s[0].pvalue.value() == BULL_NIU && s[1].pvalue.value() > BULL_NIU
     }
 
+    /// get niu of bull.
+    /// first, we should change the plate value to 10 which value greater than 10.
+    /// second, we sort plates.
+    /// third, if the remainder of the sum of any two cards and 10 is equal to lave, if lave is 0 at this point, it is a bull, otherwise, return lave;
+    /// if there is no remainder equal, there is no bull
     pub fn get_niu_by_cards(&self) -> u8 {
         let mut s = self.0.clone();
         s.as_mut().iter_mut().for_each(|p| {
@@ -109,9 +120,9 @@ impl Bull {
             let j = i + 1;
             for k in j..5 {
                 // > 10
-                if (s[i].pvalue.value() + s[k].pvalue.value()) % 10 == lave {
+                if (s[i].pvalue.value() + s[k].pvalue.value()) % BULL_NIU == lave {
                     if lave == 0 {
-                        return 10;
+                        return BULL_NIU;
                     } else {
                         return lave;
                     }
@@ -121,6 +132,7 @@ impl Bull {
         return 0;
     }
 
+    /// get type of bull.
     pub fn get_type_by_cards(&self) -> Result<BType> {
         if self.is_small_niu() {
             return Ok(BType::SMALLNIU);
@@ -135,6 +147,50 @@ impl Bull {
             return Ok(BType::SILVERNIU);
         }
         Ok(self.get_niu_by_cards().into())
+    }
+
+    /// compare two bull.
+    /// If one of the two hands is not no bull, then judge: if both hands are greater than NIU8 and both are of equal type,
+    /// then compare the size (value and suit) of the cards in the hands; otherwise compare the cards according to their type.
+    /// On the other hand, if both are no bull, then compare the size (value and suit) of the cards in the hands.
+    pub fn compare(&self, other: &Bull) -> Result<bool> {
+        let self_type = self.get_type_by_cards()?;
+        let other_type = Bull::get_type_by_cards(other)?;
+        if self_type != BType::NOTNIU || other_type != BType::NOTNIU {
+            if self_type >= BType::NIU8 && other_type >= BType::NIU8 && other_type == self_type {
+                return self.compare_greater_niu8(other);
+            }
+            return Ok(self_type.cmp(&other_type).is_ge());
+        }
+        return self.compare_no_niu(other);
+    }
+
+    /// compare two bull, both of them type greater than NIU8.
+    pub fn compare_greater_niu8(&self, other: &Bull) -> Result<bool> {
+        let mut s = self.0.clone();
+        s.sort_by_key(|&p| p.pvalue.value());
+
+        let mut o = other.0.clone();
+        o.sort_by_key(|&p| p.pvalue.value());
+
+        Ok(s.last().unwrap().cmp(o.last().unwrap()).is_gt())
+    }
+
+    /// compare two bull, both of them have no bull.
+    pub fn compare_no_niu(&self, other: &Bull) -> Result<bool> {
+        let mut s = self.0.clone();
+        s.sort_by_key(|&p| p.pvalue.value());
+
+        let mut o = other.0.clone();
+        o.sort_by_key(|&p| p.pvalue.value());
+
+        Ok(s.last().unwrap().cmp(o.last().unwrap()).is_gt())
+    }
+}
+
+impl Default for Bull {
+    fn default() -> Self {
+        return Bull([Plate::default(); 5]);
     }
 }
 
@@ -154,8 +210,7 @@ impl fmt::Display for Bull {
 }
 
 /// This enum is used to indicate the type of the doobie board
-#[derive(Debug, PartialEq)]
-#[allow(dead_code)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
 pub enum BType {
     NOTNIU,    //没牛
     NIU1,      //牛一
@@ -262,5 +317,29 @@ impl From<BType> for u8 {
             BType::BOMB => 13u8,
             BType::SMALLNIU => 14u8,
         }
+    }
+}
+
+impl fmt::Display for BType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let str = match self {
+            BType::NOTNIU => "没牛",
+            BType::NIU1 => "牛一",
+            BType::NIU2 => "牛二",
+            BType::NIU3 => "牛三",
+            BType::NIU4 => "牛四",
+            BType::NIU5 => "牛五",
+            BType::NIU6 => "牛六",
+            BType::NIU7 => "牛七",
+            BType::NIU8 => "牛八",
+            BType::NIU9 => "牛九",
+            BType::NIUNIU => "牛牛",
+            BType::SILVERNIU => "银牛",
+            BType::GOLDNIU => "金牛",
+            BType::BOMB => "炸弹",
+            BType::SMALLNIU => "五小牛",
+        };
+
+        write!(f, "{}", str)
     }
 }
