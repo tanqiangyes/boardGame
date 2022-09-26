@@ -1,3 +1,5 @@
+pub mod outcome;
+pub mod player;
 pub mod rooms;
 
 #[cfg(test)]
