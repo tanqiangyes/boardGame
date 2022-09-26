@@ -3,10 +3,12 @@
     windows_subsystem = "windows"
 )]
 
+use bull::bulls::{BType, Bull, Bulls};
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn greet() -> Vec<Bull> {
+    Bulls::new().deal(1).unwrap()
 }
 
 fn main() {

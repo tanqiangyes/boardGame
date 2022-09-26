@@ -2,6 +2,7 @@
 /// every game have 52 plates, every player have five plates, so max player number is 10.
 use anyhow::{ensure, Error, Result};
 use plate::plates::{Plate, Plates};
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// in bull game, max player number, because a deck of plate just have 52 plates.
@@ -12,7 +13,7 @@ const PER_PLAYER_PLATE: usize = 5;
 const BULL_NIU: u8 = 10;
 
 /// This is a game plate of bull, we use one plates to deal.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Bulls(Vec<Plate>);
 impl Bulls {
     /// initialize
@@ -68,7 +69,7 @@ impl fmt::Display for Bulls {
 }
 
 /// In bull game , every bull can hold five plates, so make this.
-#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq, Serialize, Deserialize)]
 pub struct Bull([Plate; 5]);
 impl Bull {
     /// every plate value is less than 10, and the sum of five plates is less than 10.
@@ -210,7 +211,7 @@ impl fmt::Display for Bull {
 }
 
 /// This enum is used to indicate the type of the doobie board
-#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq, Serialize, Deserialize)]
 pub enum BType {
     NOTNIU,    //没牛
     NIU1,      //牛一

@@ -4,10 +4,11 @@
 /// this crate just a fundentment for plate game.
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// This enum is used to indicate the suit of the board.
-#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq, Serialize, Deserialize)]
 pub enum PColor {
     Square, // 方块
     Plum,   // 梅花
@@ -44,7 +45,7 @@ impl PColor {
 }
 
 /// This enum is used to represent the value of the card
-#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq, Serialize, Deserialize)]
 pub enum PValue {
     CardA,     // A
     Card2,     // 2
@@ -130,7 +131,7 @@ impl From<u8> for PValue {
 }
 
 /// a plate is a card, which have color and value.
-#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq, Serialize, Deserialize)]
 pub struct Plate {
     pub pvalue: PValue,
     pub pcolor: PColor,
@@ -157,7 +158,7 @@ impl Default for Plate {
     }
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Plates {
     pub plates: Vec<Plate>,
 }

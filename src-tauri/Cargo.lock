@@ -1925,6 +1925,7 @@ name = "plate"
 version = "0.1.0"
 dependencies = [
  "rand 0.8.5",
+ "serde",
 ]
 
 [[package]]
@@ -2209,6 +2210,7 @@ dependencies = [
 name = "room"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "chrono",
  "uuid 1.1.2",
 ]
