@@ -13,7 +13,7 @@ fn greet(num: usize) -> Result<Vec<Bull>, String> {
     if num <= 0 {
         return Err("must have a number of bull".into());
     }
-    println!("==========={}", num);
+    // println!("==========={}", num);
     Ok(Bulls::new().deal(num).unwrap())
 }
 

@@ -9,7 +9,6 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 async function greet() {
-  console.error("sdjskldklskjdskldlkslkdlklkslksddksl");
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
   let bulls = await invoke("greet",{ num: Number(greetInputEl.value) })
       .then((message) => {
