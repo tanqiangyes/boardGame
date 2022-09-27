@@ -3,7 +3,7 @@ use crate::player::Player;
 use anyhow::Result;
 use uuid::Uuid;
 
-#[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Ord, PartialOrd, Eq, Deserialize, Serialize)]
 pub struct Room {
     room_id: uuid::Uuid,
     game_id: u64,

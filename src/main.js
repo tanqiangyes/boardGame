@@ -4,74 +4,92 @@ let greetInputEl;
 let greetMsgEl;
 
 window.addEventListener("DOMContentLoaded", () => {
-  // greetInputEl = document.querySelector("#greet-input");
+  greetInputEl = document.querySelector("#greet-input");
   greetMsgEl = document.querySelector("#greet-msg");
 });
 
 async function greet() {
+  console.error("sdjskldklskjdskldlkslkdlklkslksddksl");
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  greetMsgEl.textContent = await invoke("greet", { name: greetInputEl.value });
+  let bulls = await invoke("greet",{ num: Number(greetInputEl.value) })
+      .then((message) => {
+        return message;
+      })
+      .catch((error) => {
+        alert(error);
+        console.error(error);
+        return false;
+      });
+  var myHTML = '';
+  console.log(bulls);
+  for (let bull of bulls) {
+    for (let plate of bull) {
+      myHTML += '<img src="' + pokerPath.get(plate.pcolor+plate.pvalue) + '" >';
+    }
+    myHTML += '<br/>';
+  }
+  greetMsgEl.innerHTML = myHTML;
 }
 
 window.greet = greet;
 
 let pokerPath = new Map([
-  ["hearts_A", "/assets/pokers/hearts_A.jpg"],
-  ["hearts_2", "/assets/pokers/hearts_2.jpg"],
-  ["hearts_3", "/assets/pokers/hearts_3.jpg"],
-  ["hearts_4", "/assets/pokers/hearts_4.jpg"],
-  ["hearts_5", "/assets/pokers/hearts_5.jpg"],
-  ["hearts_6", "/assets/pokers/hearts_6.jpg"],
-  ["hearts_7", "/assets/pokers/hearts_7.jpg"],
-  ["hearts_8", "/assets/pokers/hearts_8.jpg"],
-  ["hearts_9", "/assets/pokers/hearts_9.jpg"],
-  ["hearts_10", "/assets/pokers/hearts_10.jpg"],
-  ["hearts_J", "/assets/pokers/hearts_J.jpg"],
-  ["hearts_Q", "/assets/pokers/hearts_Q.jpg"],
-  ["hearts_K", "/assets/pokers/hearts_K.jpg"],
-  ["plum_A", "/assets/pokers/plum_A.jpg"],
-  ["plum_2", "/assets/pokers/plum_2.jpg"],
-  ["plum_3", "/assets/pokers/plum_3.jpg"],
-  ["plum_4", "/assets/pokers/plum_4.jpg"],
-  ["plum_5", "/assets/pokers/plum_5.jpg"],
-  ["plum_6", "/assets/pokers/plum_6.jpg"],
-  ["plum_7", "/assets/pokers/plum_7.jpg"],
-  ["plum_8", "/assets/pokers/plum_8.jpg"],
-  ["plum_9", "/assets/pokers/plum_9.jpg"],
-  ["plum_10", "/assets/pokers/plum_10.jpg"],
-  ["plum_J", "/assets/pokers/plum_J.jpg"],
-  ["plum_Q", "/assets/pokers/plum_Q.jpg"],
-  ["plum_K", "/assets/pokers/plum_K.jpg"],
-  ["spades_A", "/assets/pokers/spades_A.jpg"],
-  ["spades_2", "/assets/pokers/spades_2.jpg"],
-  ["spades_3", "/assets/pokers/spades_3.jpg"],
-  ["spades_4", "/assets/pokers/spades_4.jpg"],
-  ["spades_5", "/assets/pokers/spades_5.jpg"],
-  ["spades_6", "/assets/pokers/spades_6.jpg"],
-  ["spades_7", "/assets/pokers/spades_7.jpg"],
-  ["spades_8", "/assets/pokers/spades_8.jpg"],
-  ["spades_9", "/assets/pokers/spades_9.jpg"],
-  ["spades_10", "/assets/pokers/spades_10.jpg"],
-  ["spades_J", "/assets/pokers/spades_J.jpg"],
-  ["spades_Q", "/assets/pokers/spades_Q.jpg"],
-  ["spades_K", "/assets/pokers/spades_K.jpg"],
-  ["square_A", "/assets/pokers/square_A.jpg"],
-  ["square_2", "/assets/pokers/square_2.jpg"],
-  ["square_3", "/assets/pokers/square_3.jpg"],
-  ["square_4", "/assets/pokers/square_4.jpg"],
-  ["square_5", "/assets/pokers/square_5.jpg"],
-  ["square_6", "/assets/pokers/square_6.jpg"],
-  ["square_7", "/assets/pokers/square_7.jpg"],
-  ["square_8", "/assets/pokers/square_8.jpg"],
-  ["square_9", "/assets/pokers/square_9.jpg"],
-  ["square_10", "/assets/pokers/square_10.jpg"],
-  ["square_J", "/assets/pokers/square_J.jpg"],
-  ["square_Q", "/assets/pokers/square_Q.jpg"],
-  ["square_K", "/assets/pokers/square_K.jpg"],
-  ["King", "/assets/pokers/King.jpg"],
-  ["Queen", "/assets/pokers/Queen.jpg"],
+  ["HeartsCardA", "/assets/pokers/HeartsCardA.jpg"],
+  ["HeartsCard2", "/assets/pokers/HeartsCard2.jpg"],
+  ["HeartsCard3", "/assets/pokers/HeartsCard3.jpg"],
+  ["HeartsCard4", "/assets/pokers/HeartsCard4.jpg"],
+  ["HeartsCard5", "/assets/pokers/HeartsCard5.jpg"],
+  ["HeartsCard6", "/assets/pokers/HeartsCard6.jpg"],
+  ["HeartsCard7", "/assets/pokers/HeartsCard7.jpg"],
+  ["HeartsCard8", "/assets/pokers/HeartsCard8.jpg"],
+  ["HeartsCard9", "/assets/pokers/HeartsCard9.jpg"],
+  ["HeartsCard10", "/assets/pokers/HeartsCard10.jpg"],
+  ["HeartsCardJ", "/assets/pokers/HeartsCardJ.jpg"],
+  ["HeartsCardQ", "/assets/pokers/HeartsCardQ.jpg"],
+  ["HeartsCardK", "/assets/pokers/HeartsCardK.jpg"],
+  ["PlumCardA", "/assets/pokers/PlumCardA.jpg"],
+  ["PlumCard2", "/assets/pokers/PlumCard2.jpg"],
+  ["PlumCard3", "/assets/pokers/PlumCard3.jpg"],
+  ["PlumCard4", "/assets/pokers/PlumCard4.jpg"],
+  ["PlumCard5", "/assets/pokers/PlumCard5.jpg"],
+  ["PlumCard6", "/assets/pokers/PlumCard6.jpg"],
+  ["PlumCard7", "/assets/pokers/PlumCard7.jpg"],
+  ["PlumCard8", "/assets/pokers/PlumCard8.jpg"],
+  ["PlumCard9", "/assets/pokers/PlumCard9.jpg"],
+  ["PlumCard10", "/assets/pokers/PlumCard10.jpg"],
+  ["PlumCardJ", "/assets/pokers/PlumCardJ.jpg"],
+  ["PlumCardQ", "/assets/pokers/PlumCardQ.jpg"],
+  ["PlumCardK", "/assets/pokers/PlumCardK.jpg"],
+  ["SpadesCardA", "/assets/pokers/SpadesCardA.jpg"],
+  ["SpadesCard2", "/assets/pokers/SpadesCard2.jpg"],
+  ["SpadesCard3", "/assets/pokers/SpadesCard3.jpg"],
+  ["SpadesCard4", "/assets/pokers/SpadesCard4.jpg"],
+  ["SpadesCard5", "/assets/pokers/SpadesCard5.jpg"],
+  ["SpadesCard6", "/assets/pokers/SpadesCard6.jpg"],
+  ["SpadesCard7", "/assets/pokers/SpadesCard7.jpg"],
+  ["SpadesCard8", "/assets/pokers/SpadesCard8.jpg"],
+  ["SpadesCard9", "/assets/pokers/SpadesCard9.jpg"],
+  ["SpadesCard10", "/assets/pokers/SpadesCard10.jpg"],
+  ["SpadesCardJ", "/assets/pokers/SpadesCardJ.jpg"],
+  ["SpadesCardQ", "/assets/pokers/SpadesCardQ.jpg"],
+  ["SpadesCardK", "/assets/pokers/SpadesCardK.jpg"],
+  ["SquareCardA", "/assets/pokers/SquareCardA.jpg"],
+  ["SquareCard2", "/assets/pokers/SquareCard2.jpg"],
+  ["SquareCard3", "/assets/pokers/SquareCard3.jpg"],
+  ["SquareCard4", "/assets/pokers/SquareCard4.jpg"],
+  ["SquareCard5", "/assets/pokers/SquareCard5.jpg"],
+  ["SquareCard6", "/assets/pokers/SquareCard6.jpg"],
+  ["SquareCard7", "/assets/pokers/SquareCard7.jpg"],
+  ["SquareCard8", "/assets/pokers/SquareCard8.jpg"],
+  ["SquareCard9", "/assets/pokers/SquareCard9.jpg"],
+  ["SquareCard10", "/assets/pokers/SquareCard10.jpg"],
+  ["SquareCardJ", "/assets/pokers/SquareCardJ.jpg"],
+  ["SquareCardQ", "/assets/pokers/SquareCardQ.jpg"],
+  ["SquareCardK", "/assets/pokers/SquareCardK.jpg"],
+  ["KingCardKing", "/assets/pokers/KingCardKing.jpg"],
+  ["QueenCardQueen", "/assets/pokers/QueenCardQueen.jpg"],
 ]);
 
-function getPath(name: string) :string  {
-  return pokerPath[name]
-}
+// function getPath(name: string) :string  {
+//   return pokerPath[name]
+// }

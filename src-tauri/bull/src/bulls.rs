@@ -26,7 +26,7 @@ impl Bulls {
     /// max player number: 10;
     /// return a vector, each column have five plate.
     /// not failed.
-    pub fn deal(&self, player: usize) -> Result<Vec<Bull>, Error> {
+    pub fn deal(&self, player: usize) -> Result<Vec<Bull>> {
         ensure!(
             player <= MAX_PLAYERS,
             "max player number cannot be greater than 10"
