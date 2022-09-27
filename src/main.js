@@ -17,20 +17,38 @@ async function greet() {
       .catch((error) => {
         alert(error);
         console.error(error);
-        return false;
+        return [];
       });
-  var myHTML = '';
+  let myHTML = '';
   console.log(bulls);
+  let num = 1;
   for (let bull of bulls) {
+    myHTML += '<div id="bull' + num + '">';
     for (let plate of bull) {
-      myHTML += '<img src="' + pokerPath.get(plate.pcolor+plate.pvalue) + '" >';
+      myHTML += '<img src="' + pokerPath.get(plate.pcolor+plate.pvalue) + '" value="' + plate.pvalue + '">';
     }
-    myHTML += '<br/>';
+    myHTML += '<button onclick="cal(this)" value=\'' + JSON.stringify(bull) +'\'>calniu</button></div>';
+    num++;
   }
   greetMsgEl.innerHTML = myHTML;
 }
 
 window.greet = greet;
+
+async function cal(my) {
+  console.log(my.value)
+  // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+  my.innerHTML = await invoke("cal", {bull: JSON.parse(my.value)})
+      .then((message) => {
+        return message;
+      })
+      .catch((error) => {
+        alert(error);
+        console.error(error);
+        return false;
+      });
+}
+window.cal = cal;
 
 let pokerPath = new Map([
   ["HeartsCardA", "/assets/pokers/HeartsCardA.jpg"],

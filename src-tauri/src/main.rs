@@ -17,9 +17,15 @@ fn greet(num: usize) -> Result<Vec<Bull>, String> {
     Ok(Bulls::new().deal(num).unwrap())
 }
 
+#[tauri::command]
+fn cal(bull: Bull) -> Result<String, String> {
+    // println!("==========={}", num);
+    Ok(bull.get_type_by_cards().unwrap().string().into())
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, cal])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
