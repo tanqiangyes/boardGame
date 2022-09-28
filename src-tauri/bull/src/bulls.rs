@@ -1,6 +1,6 @@
 /// a bull game.
 /// every game have 52 plates, every player have five plates, so max player number is 10.
-use anyhow::{ensure, Error, Result};
+use anyhow::{ensure, Result};
 use plate::plates::{Plate, Plates};
 use serde::{Deserialize, Serialize};
 use std::fmt;

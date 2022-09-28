@@ -33,11 +33,11 @@ import Bull from "./Bull.vue";
 
 <template>
   <div class="card">
-    <input id="greet-input" v-model.number="num" placeholder="Enter a number of plate..." />
+    <input id="bull-input" v-model.number="num" placeholder="Enter a number of plate..." />
     <button type="button" @click="greet()">Greet</button>
   </div>
 
-  <p id="greet-msg">
+  <p id="bull-msg">
     <Bull :data="plates"></Bull>
   </p>
 </template>

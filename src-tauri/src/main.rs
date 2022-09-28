@@ -4,8 +4,7 @@
 )]
 
 use anyhow::Result;
-use bull::bulls::{BType, Bull, Bulls};
-use plate::plates::Plate;
+use bull::bulls::{Bull, Bulls};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]

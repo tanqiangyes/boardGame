@@ -25,9 +25,6 @@ export default {
   },
   methods: {
     cal: async function (index) {
-      console.log("---------")
-      console.log(index)
-      console.log("---------")
       let item = document.getElementById("button"+ index);
       // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
       item.innerText = await invoke("cal", {bull: this.data[index]})
