@@ -1,6 +1,7 @@
 use crate::outcome::Outcome;
 use crate::player::Player;
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[derive(Debug, Clone, PartialEq, Ord, PartialOrd, Eq, Deserialize, Serialize)]
@@ -34,11 +35,11 @@ impl Room {
         self.players.push(player)
     }
 
-    pub fn add_players(&mut self, players: Vec<Player>) {
+    pub fn add_players(&mut self, players: &mut Vec<Player>) {
         self.players.append(players)
     }
 
     pub fn get_result(&self) -> Vec<Outcome> {
-        Ok(self.result)
+        self.result
     }
 }

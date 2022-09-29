@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 #[derive(Debug, Copy, Clone, PartialEq, Ord, PartialOrd, Eq, Deserialize, Serialize)]
 pub struct Player {
     pub name: &'static str,

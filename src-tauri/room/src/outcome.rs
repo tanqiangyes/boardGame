@@ -1,6 +1,7 @@
 //! a result of games.
 use crate::player::Player;
 use chrono::prelude::*;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fmt::Formatter;
 
@@ -17,7 +18,7 @@ impl Outcome {
     pub fn new(player: Player, to_player: Player, win_bet: u64) -> Self {
         assert_eq!(
             player, to_player,
-            "from player {} and to player {} should not equal",
+            "from player {:?} and to player {:?} should not equal",
             player, to_player
         );
         assert!(win_bet > 0, "debet should be greater than 0");
@@ -34,15 +35,16 @@ impl fmt::Display for Outcome {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let mut outcome = String::new();
         // Format the datetime how you want
-        let newdate = DateTime::from_utc(NaiveDateTime::from_timestamp(self.timestamp, 0), Utc)
-            .format("%Y-%m-%d %H:%M:%S");
-        outcome.push_str(newdate);
+        // let newdate = DateTime::from_utc(NaiveDateTime::from_timestamp(self.timestamp, 0), Utc)
+        //     .format("%Y-%m-%d %H:%M:%S")
+        //     .to_string();
+        // outcome.push_str(&newdate);
         outcome.push_str(" ");
-        outcome.push_str(self.player);
+        outcome.push_str(self.player.name);
         outcome.push_str(" send ");
-        outcome.push_str(self.win_bet);
+        outcome.push_str(&format!("{}", self.win_bet));
         outcome.push_str(" coin to ");
-        outcome.push_str(self.to_player);
+        outcome.push_str(self.to_player.name);
         write!(f, "{}", outcome)
     }
 }
